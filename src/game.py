@@ -1,10 +1,18 @@
 import logging
-import re
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Literal
 
 import pandas as pd
+
+from src.hints import (
+    CitiesHint,
+    DatesHint,
+    GenderHint,
+    HiddenNameHint,
+    Hint,
+    OccupationHint,
+)
+from src.person import FamousPerson, Place
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +28,12 @@ class Difficulty(Enum):
     HARD = DifficultyConfig(cutoff=70)
     EXPERTS = DifficultyConfig(cutoff=50)
     IMPOSSIBLE = DifficultyConfig(cutoff=0)
+
+
+class GameStatus(Enum):
+    FAILED = -1
+    ONGOING = 0
+    SUCCESS = 1
 
 
 class Game:
@@ -49,13 +63,13 @@ class Game:
                 name=row["bplace_name"],
                 lat=row["bplace_lat"],
                 lon=row["bplace_lon"],
-                year=row["birthyear"],
+                year=int(row["birthyear"]),
             ),
             death_place=Place(
                 name=row["dplace_name"],
                 lat=row["dplace_lat"],
                 lon=row["dplace_lon"],
-                year=row["deathyear"],
+                year=int(row["deathyear"]),
             ),
             gender=row["gender"],
             occupation=row["occupation"],
@@ -67,44 +81,30 @@ class Game:
 
 
 @dataclass()
-class Place:
-    name: str
-    lat: float
-    lon: float
-    year: int
-
-
-@dataclass()
-class FamousPerson:
-    birth_place: Place
-    death_place: Place
-    gender: str
-    occupation: str
-    name: str
-
-
-@dataclass()
 class GameSession:
     selected_person: FamousPerson
     candidates: list[str]
     guesses: list[str] = field(default_factory=list)
 
     step: int = 0
-    max_steps: int = 5
 
-    game_status: Literal[0, -1, 1] = 0
+    game_status: GameStatus = GameStatus.ONGOING
 
-    def get_hints(self) -> list[str]:
-        hints = [
-            f"Born in {self.selected_person.birth_place.name}, died in {self.selected_person.death_place.name}",
-            f"Lived in {self.selected_person.birth_place.year} to {self.selected_person.death_place.year}",
-            f"Gender: {self.selected_person.gender}",
-            f"Occupation: {self.selected_person.occupation}",
-            f"Format: {re.sub('[a-zA-Z]', '_', self.selected_person.name)}",
+    hints: list[Hint] = field(init=False)
+
+    def __post_init__(self):
+        self.hints = [
+            CitiesHint.from_person(self.selected_person),
+            DatesHint.from_person(self.selected_person),
+            GenderHint.from_person(self.selected_person),
+            OccupationHint.from_person(self.selected_person),
+            HiddenNameHint.from_person(self.selected_person),
         ]
 
-        select_index = min(self.step, len(hints))
-        return hints[:select_index]
+    def get_hints(self) -> list[Hint]:
+
+        select_index = min(self.step, len(self.hints))
+        return self.hints[:select_index]
 
     def get_guesses(self) -> list[str]:
         return self.guesses
@@ -112,13 +112,19 @@ class GameSession:
     def guess(self, guess_name: str):
         logger.debug(f"Guessing {guess_name}")
         self.guesses.append(guess_name)
-        if guess_name == self.selected_person.name:
-            self.game_status = 1
+        if (
+            guess_name == self.selected_person.name
+            and self.game_status is not GameStatus.FAILED
+        ):
+            self.game_status = GameStatus.SUCCESS
 
         self.step = self.step + 1
-        # TODO: Make it depends on the amount of hints
-        if self.step > self.max_steps and self.game_status != 1:
-            self.game_status = -1
+
+        if (
+            self.step > len(self.hints)
+            and self.game_status is not GameStatus.SUCCESS
+        ):
+            self.game_status = GameStatus.FAILED
 
         logger.info(f"Status {self.game_status} at step {self.step}")
         return self.game_status

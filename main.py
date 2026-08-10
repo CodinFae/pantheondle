@@ -6,17 +6,16 @@ from components.map_component import map_component
 from components.session_component import game_session_card
 from src.game import Difficulty, Game
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+game = Game("./data/person_2025_update.csv")
 
 
 @ui.page("/")
 async def page():
-    logger.error("TEST")
     with ui.element("nav").classes("bg-primary w-full p-2"):
         ui.label("Pantheondle").classes("text-xl text-white text-bold")
-
-    game = Game("./data/person_2025_update.csv")
 
     session = game.start(Difficulty.EASY)
 
