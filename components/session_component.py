@@ -35,6 +35,7 @@ def guess_refresh(guess: str, session: GameSession):
     session.guess(guess)
     show_game.refresh()
     show_guesses.refresh()
+    guess_inputs.refresh()
 
 
 @ui.refreshable
@@ -43,17 +44,25 @@ def show_guesses(session: GameSession):
         for guess in session.get_guesses():
             ui.label(guess)
 
+@ui.refreshable
+def guess_inputs(session: GameSession):
+    select_person = ui.select(
+        label="Guess",
+        with_input=True,
+        options=session.candidates,
+        on_change=lambda e: guess_refresh(e.value, session),
+    )
+    skip_button = ui.button("Skip", on_click=lambda: guess_refresh("SKIP", session=session))
+
+    if session.game_status is not GameStatus.ONGOING:
+        select_person.disable()
+        skip_button.disable()
+
 
 def game_session_card(session: GameSession):
     with ui.card().classes("w-full") as card:
         with ui.element("div").classes("flex flex-row gap-2"):
-            ui.select(
-                label="Guess",
-                with_input=True,
-                options=session.candidates,
-                on_change=lambda e: guess_refresh(e.value, session),
-            )
-            ui.button("Skip", on_click=lambda: guess_refresh("SKIP", session=session))
+            guess_inputs(session=session)
             show_guesses(session=session)
 
         show_game(session=session)
