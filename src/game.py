@@ -86,6 +86,7 @@ class GameSession:
     candidates: list[str]
     guesses: list[str] = field(default_factory=list)
 
+
     step: int = 0
 
     game_status: GameStatus = GameStatus.ONGOING
