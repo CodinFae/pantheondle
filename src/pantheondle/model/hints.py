@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import re
 from enum import Enum
 
-from pantheondle.model.person import FamousPerson
+from pantheondle.model.person import FamousPerson, Gender
 
 
 @dataclass(slots=True, frozen=True)
@@ -29,27 +29,14 @@ class DatesHint:
             death_year=int(person.death_place.year),
         )
 
-
-class Gender(Enum):
-    OTHER = 0
-    MALE = 1
-    FEMALE = 2
-
-
 @dataclass(slots=True, frozen=True)
 class GenderHint:
     gender: Gender
 
     @classmethod
     def from_person(cls, person: FamousPerson) -> "GenderHint":
-        raw_gender = person.gender
-        gender = Gender.OTHER
-        match raw_gender:
-            case "M":
-                gender = Gender.MALE
-            case "F":
-                gender = Gender.FEMALE
-        return cls(gender=gender)
+
+        return cls(gender=person.gender)
 
 
 @dataclass(slots=True, frozen=True)

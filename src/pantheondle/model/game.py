@@ -58,35 +58,17 @@ class Game:
     def start(self, difficulty: Difficulty):
         all_persons = self._get_persons_by_level(difficulty)
         row = all_persons.sample(1).iloc[0]
-        selected_person = FamousPerson(
-            birth_place=Place(
-                name=row["bplace_name"],
-                lat=row["bplace_lat"],
-                lon=row["bplace_lon"],
-                year=int(row["birthyear"]),
-            ),
-            death_place=Place(
-                name=row["dplace_name"],
-                lat=row["dplace_lat"],
-                lon=row["dplace_lon"],
-                year=int(row["deathyear"]),
-            ),
-            gender=row["gender"],
-            occupation=row["occupation"],
-            name=row["name"],
-        )
+
         return GameSession(
-            selected_person=selected_person, candidates=all_persons["name"].to_list()
+            selected_person=FamousPerson.from_row(row), candidates=all_persons["name"].to_list()
         )
 
 
-@dataclass()
+@dataclass(slots=True)
 class GameSession:
     selected_person: FamousPerson
     candidates: list[str]
-    guesses: list[str] = field(default_factory=list)
-
-    step: int = 0
+    guesses: list[str | None] = field(default_factory=list)
 
     game_status: GameStatus = GameStatus.ONGOING
 
@@ -102,15 +84,12 @@ class GameSession:
         ]
 
     def get_hints(self) -> list[Hint]:
+        return self.hints[:len(self.guesses)]
 
-        select_index = min(self.step, len(self.hints))
-        return self.hints[:select_index]
-
-    def get_guesses(self) -> list[str]:
+    def get_guesses(self) -> list[str | None]:
         return self.guesses
 
-    def guess(self, guess_name: str):
-        logger.debug(f"Guessing {guess_name}")
+    def guess(self, guess_name: str | None):
         self.guesses.append(guess_name)
         if (
             guess_name == self.selected_person.name
@@ -118,10 +97,8 @@ class GameSession:
         ):
             self.game_status = GameStatus.SUCCESS
 
-        self.step = self.step + 1
-
-        if self.step > len(self.hints) and self.game_status is not GameStatus.SUCCESS:
+        if len(self.guesses) > len(self.hints) and self.game_status is not GameStatus.SUCCESS:
             self.game_status = GameStatus.FAILED
 
-        logger.info(f"Status {self.game_status} at step {self.step}")
+        logger.info(f"Status {self.game_status} at step {len(self.guesses)}")
         return self.game_status

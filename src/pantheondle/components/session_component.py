@@ -36,18 +36,21 @@ def show_game(session: GameSession):
                     ui.label(f"Born on {hint.birth_year}, Died on {hint.death_year}")
 
 
-def guess_refresh(guess: str, session: GameSession):
+def guess_refresh(guess: str | None, session: GameSession):
     session.guess(guess)
+    guess_inputs.refresh()
     show_game.refresh()
     show_guesses.refresh()
-    guess_inputs.refresh()
 
 
 @ui.refreshable
 def show_guesses(session: GameSession):
     with ui.grid(columns=6):
         for guess in session.get_guesses():
-            ui.label(guess)
+            if guess is None:
+                ui.label("Skipped")
+            else:
+                ui.label(guess)
 
 
 @ui.refreshable
@@ -59,7 +62,7 @@ def guess_inputs(session: GameSession):
         on_change=lambda e: guess_refresh(e.value, session),
     )
     skip_button = ui.button(
-        "Skip", on_click=lambda: guess_refresh("SKIP", session=session)
+        "Skip", on_click=lambda: guess_refresh(None, session=session)
     )
 
     if session.game_status is not GameStatus.ONGOING:
