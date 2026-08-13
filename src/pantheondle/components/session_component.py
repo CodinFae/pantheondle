@@ -2,8 +2,14 @@ import logging
 
 from nicegui import ui
 
-from src.game import GameSession, GameStatus
-from src.hints import CitiesHint, DatesHint, GenderHint, HiddenNameHint, OccupationHint
+from pantheondle.model.game import GameSession, GameStatus
+from pantheondle.model.hints import (
+    CitiesHint,
+    DatesHint,
+    GenderHint,
+    HiddenNameHint,
+    OccupationHint,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +36,6 @@ def show_game(session: GameSession):
                     ui.label(f"Born on {hint.birth_year}, Died on {hint.death_year}")
 
 
-
 def guess_refresh(guess: str, session: GameSession):
     session.guess(guess)
     show_game.refresh()
@@ -44,6 +49,7 @@ def show_guesses(session: GameSession):
         for guess in session.get_guesses():
             ui.label(guess)
 
+
 @ui.refreshable
 def guess_inputs(session: GameSession):
     select_person = ui.select(
@@ -52,7 +58,9 @@ def guess_inputs(session: GameSession):
         options=session.candidates,
         on_change=lambda e: guess_refresh(e.value, session),
     )
-    skip_button = ui.button("Skip", on_click=lambda: guess_refresh("SKIP", session=session))
+    skip_button = ui.button(
+        "Skip", on_click=lambda: guess_refresh("SKIP", session=session)
+    )
 
     if session.game_status is not GameStatus.ONGOING:
         select_person.disable()

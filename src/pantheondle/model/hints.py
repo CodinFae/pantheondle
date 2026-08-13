@@ -1,25 +1,13 @@
 import re
-from abc import abstractmethod
 from enum import Enum
 
 from pydantic.dataclasses import dataclass
 
-from src.person import FamousPerson
+from pantheondle.model.person import FamousPerson
 
 
 @dataclass(slots=True, frozen=True)
-class Hint:
-    @classmethod
-    @abstractmethod
-    def from_person(cls, person: FamousPerson) -> "Hint": ...
-
-
-@dataclass(slots=True, frozen=True)
-class MapHint(Hint): ...
-
-
-@dataclass(slots=True, frozen=True)
-class CitiesHint(Hint):
+class CitiesHint:
     birth_city: str
     death_city: str
 
@@ -31,7 +19,7 @@ class CitiesHint(Hint):
 
 
 @dataclass(slots=True, frozen=True)
-class DatesHint(Hint):
+class DatesHint:
     birth_year: int
     death_year: int
 
@@ -50,7 +38,7 @@ class Gender(Enum):
 
 
 @dataclass(slots=True, frozen=True)
-class GenderHint(Hint):
+class GenderHint:
     gender: Gender
 
     @classmethod
@@ -66,7 +54,7 @@ class GenderHint(Hint):
 
 
 @dataclass(slots=True, frozen=True)
-class OccupationHint(Hint):
+class OccupationHint:
     occupation: str
 
     @classmethod
@@ -75,9 +63,12 @@ class OccupationHint(Hint):
 
 
 @dataclass(slots=True, frozen=True)
-class HiddenNameHint(Hint):
+class HiddenNameHint:
     name: str
 
     @classmethod
     def from_person(cls, person: FamousPerson) -> "HiddenNameHint":
         return cls(name=re.sub("[a-zA-Z]", "_", person.name))
+
+
+Hint = CitiesHint | DatesHint | GenderHint | OccupationHint | HiddenNameHint

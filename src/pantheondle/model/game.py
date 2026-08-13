@@ -4,7 +4,7 @@ from enum import Enum
 
 import pandas as pd
 
-from src.hints import (
+from pantheondle.model.hints import (
     CitiesHint,
     DatesHint,
     GenderHint,
@@ -12,7 +12,7 @@ from src.hints import (
     Hint,
     OccupationHint,
 )
-from src.person import FamousPerson, Place
+from pantheondle.model.person import FamousPerson, Place
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +86,6 @@ class GameSession:
     candidates: list[str]
     guesses: list[str] = field(default_factory=list)
 
-
     step: int = 0
 
     game_status: GameStatus = GameStatus.ONGOING
@@ -121,10 +120,7 @@ class GameSession:
 
         self.step = self.step + 1
 
-        if (
-            self.step > len(self.hints)
-            and self.game_status is not GameStatus.SUCCESS
-        ):
+        if self.step > len(self.hints) and self.game_status is not GameStatus.SUCCESS:
             self.game_status = GameStatus.FAILED
 
         logger.info(f"Status {self.game_status} at step {self.step}")

@@ -1,6 +1,6 @@
 from nicegui import ui
 
-from src.game import GameSession
+from pantheondle.model.game import GameSession
 
 
 async def map_component(session: GameSession):
