@@ -10,7 +10,7 @@ The HPI is:
 
 ## Setup
 
-Download a csv from the Pantheon website, store it in ./data and run the project via `uv run main.py`
+Download a csv from the Pantheon website, store it in ./data and run the project via `uv run -m pantheondle.main`
 
 ## Citation
 
