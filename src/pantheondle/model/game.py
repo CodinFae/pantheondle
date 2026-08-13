@@ -1,6 +1,7 @@
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import Path
 
 import pandas as pd
 
@@ -12,7 +13,7 @@ from pantheondle.model.hints import (
     Hint,
     OccupationHint,
 )
-from pantheondle.model.person import FamousPerson, Place
+from pantheondle.model.person import FamousPerson
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class GameStatus(Enum):
 
 
 class Game:
-    def __init__(self, csv_path) -> None:
+    def __init__(self, csv_path: Path) -> None:
         df = pd.read_csv(csv_path)
         logger.info(f"Loaded {len(df)} persons")
         self.persons = self._filter_persons(df)

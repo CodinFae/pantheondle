@@ -48,9 +48,9 @@ def show_guesses(session: GameSession):
     with ui.grid(columns=6):
         for guess in session.get_guesses():
             if guess is None:
-                ui.label("Skipped")
+                _ = ui.label("Skipped")
             else:
-                ui.label(guess)
+                _ = ui.label(guess)
 
 
 @ui.refreshable
@@ -66,8 +66,8 @@ def guess_inputs(session: GameSession):
     )
 
     if session.game_status is not GameStatus.ONGOING:
-        select_person.disable()
-        skip_button.disable()
+        _ = select_person.disable()
+        _ = skip_button.disable()
 
 
 def game_session_card(session: GameSession):

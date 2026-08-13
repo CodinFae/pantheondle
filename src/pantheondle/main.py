@@ -15,15 +15,14 @@ game = Game("./data/person_2025_update.csv")
 @ui.page("/")
 async def welcome_page():
     with ui.element("nav").classes("bg-primary w-full p-2"):
-        ui.label("Pantheondle").classes("text-xl text-white text-bold")
+        _ = ui.label("Pantheondle").classes("text-xl text-white text-bold")
     ui.label("Select your difficulty")
     with ui.element("div").classes("flex gap-4"):
         for difficulty in Difficulty:
             with (
                 ui.card()
                 .classes(
-                    "cursor-pointer hover:bg-slate-200 "
-                    "ease-in-out duration-200 hover:scale-110"
+                    "cursor-pointer hover:bg-slate-200 ease-in-out duration-200 hover:scale-110"
                 )
                 .on("click", lambda d=difficulty: ui.navigate.to(f"/game/{d.name}"))
             ):
