@@ -1,16 +1,12 @@
 [project]
 name = "pantheondle"
 version = "0.1.0"
-description = "Add your description here"
+description = "Play with Pantheon.world data and try to guess who is the famous person depicted"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "basemap>=2.0.0",
-    "matplotlib>=3.9.4",
     "nicegui>=3.15.0",
-    "numpy>=2.0.2",
     "pandas>=2.3.3",
-    "streamlit>=1.50.0",
 ]
 
 
@@ -23,5 +19,9 @@ packages = ["src/pantheondle"]
 
 [dependency-groups]
 dev = [
+    "deptry>=0.25.1",
     "ruff>=0.16.1",
 ]
+
+[tool.deptry]
+known_first_party = ["pantheondle"]

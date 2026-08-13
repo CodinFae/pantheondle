@@ -1,7 +1,6 @@
+from dataclasses import dataclass
 import re
 from enum import Enum
-
-from pydantic.dataclasses import dataclass
 
 from pantheondle.model.person import FamousPerson
 
