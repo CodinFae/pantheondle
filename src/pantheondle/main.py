@@ -35,11 +35,11 @@ async def game_page(difficulty: str):
     async def content():
         try:
             difficulty_enum = Difficulty[difficulty]
-            game = Game("./data/persons.parquet")
 
         except ValueError:
             ui.navigate.to("/")
             return
+        game = Game("./data/persons.parquet")
 
         session = game.start(difficulty_enum)
 
@@ -50,5 +50,8 @@ async def game_page(difficulty: str):
 
     await base_layout(content)
 
+def main():
+    ui.run()
 
-ui.run()
+if __name__ in {"__main__","__mp_main__"}:
+    main()

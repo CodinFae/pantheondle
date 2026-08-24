@@ -10,12 +10,21 @@ class Place:
     year: int
 
     @classmethod
-    def from_row(cls, row) -> "Place":
+    def birth_from_row(cls, row) -> "Place":
         return cls(
             name=row["bplace_name"],
             lat=row["bplace_lat"],
             lon=row["bplace_lon"],
             year=int(row["birthyear"]),
+        )
+
+    @classmethod
+    def death_from_row(cls, row) -> "Place":
+        return cls(
+            name=row["dplace_name"],
+            lat=row["dplace_lat"],
+            lon=row["dplace_lon"],
+            year=int(row["deathyear"]),
         )
 
 
@@ -44,8 +53,8 @@ class FamousPerson:
                 gender = Gender.FEMALE
 
         return cls(
-            birth_place=Place.from_row(row),
-            death_place=Place.from_row(row),
+            birth_place=Place.birth_from_row(row),
+            death_place=Place.death_from_row(row),
             gender=gender,
             occupation=row["occupation"],
             name=row["name"],
