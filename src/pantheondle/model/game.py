@@ -38,20 +38,10 @@ class GameStatus(Enum):
 
 
 class Game:
-    def __init__(self, csv_path: Path) -> None:
-        df = pd.read_csv(csv_path)
+    def __init__(self, parquet_path: Path) -> None:
+        df = pd.read_parquet(parquet_path)
         logger.info(f"Loaded {len(df)} persons")
-        self.persons = self._filter_persons(df)
-        logger.info(f"Kept {len(self.persons)} persons")
-
-    def _filter_persons(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Filter the provided dataframe by removing people that are still alive and the one with corrupted data"""
-        filtered = df[~df["alive"]]
-        filtered = filtered[pd.notna(filtered["dplace_name"])]
-        filtered = filtered[pd.notna(filtered["bplace_name"])]
-        filtered = filtered[pd.notna(filtered["bplace_lat"])]
-        filtered = filtered[pd.notna(filtered["dplace_lat"])]
-        return filtered
+        self.persons = df
 
     def _get_persons_by_level(self, difficulty: Difficulty) -> pd.DataFrame:
         return self.persons[self.persons["hpi"] > difficulty.value.cutoff]

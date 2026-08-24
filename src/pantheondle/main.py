@@ -34,7 +34,7 @@ async def game_page(difficulty: str):
     async def content():
         try:
             difficulty_enum = Difficulty[difficulty]
-            game = Game("./data/person_2025_update.csv")
+            game = Game("./data/persons.parquet")
 
         except ValueError:
             ui.navigate.to("/")
