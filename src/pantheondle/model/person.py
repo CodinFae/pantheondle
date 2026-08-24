@@ -18,6 +18,7 @@ class Place:
             year=int(row["birthyear"]),
         )
 
+
 class Gender(Enum):
     OTHER = 0
     MALE = 1

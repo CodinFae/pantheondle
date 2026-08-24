@@ -1,9 +1,7 @@
 import argparse
-import pyarrow
-from ast import arg
+from pathlib import Path
 
 import pandas as pd
-from pathlib import Path
 
 
 def prepare_data(input_path: Path, output_dir: Path):
@@ -23,14 +21,18 @@ def prepare_data(input_path: Path, output_dir: Path):
     df.to_parquet(output_path, index=False)
     print(f"Saved file to {output_path}")
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare the Pantheondle dataset")
 
-    parser.add_argument("input", type=Path, help="Path to the CSV of the pantheon dataset")
+    parser.add_argument(
+        "input", type=Path, help="Path to the CSV of the pantheon dataset"
+    )
     parser.add_argument("output", type=Path, help="Path to the output directory")
     args = parser.parse_args()
 
     prepare_data(args.input, args.output)
+
 
 if __name__ == "__main__":
     main()

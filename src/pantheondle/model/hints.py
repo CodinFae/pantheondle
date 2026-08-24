@@ -1,6 +1,5 @@
-from dataclasses import dataclass
 import re
-from enum import Enum
+from dataclasses import dataclass
 
 from pantheondle.model.person import FamousPerson, Gender
 
@@ -28,6 +27,7 @@ class DatesHint:
             birth_year=int(person.birth_place.year),
             death_year=int(person.death_place.year),
         )
+
 
 @dataclass(slots=True, frozen=True)
 class GenderHint:

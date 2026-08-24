@@ -10,6 +10,7 @@ from pantheondle.model.game import Difficulty, Game
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 @ui.page("/")
 async def welcome_page():
     async def content():
@@ -25,8 +26,8 @@ async def welcome_page():
                     .on("click", lambda d=difficulty: ui.navigate.to(f"/game/{d.name}"))
                 ):
                     ui.label(str(difficulty.name))
-    await base_layout(content)
 
+    await base_layout(content)
 
 
 @ui.page("/game/{difficulty}")

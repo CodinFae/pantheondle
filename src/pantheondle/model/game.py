@@ -51,7 +51,8 @@ class Game:
         row = all_persons.sample(1).iloc[0]
 
         return GameSession(
-            selected_person=FamousPerson.from_row(row), candidates=all_persons["name"].to_list()
+            selected_person=FamousPerson.from_row(row),
+            candidates=all_persons["name"].to_list(),
         )
 
 
@@ -75,7 +76,7 @@ class GameSession:
         ]
 
     def get_hints(self) -> list[Hint]:
-        return self.hints[:len(self.guesses)]
+        return self.hints[: len(self.guesses)]
 
     def get_guesses(self) -> list[str | None]:
         return self.guesses
@@ -88,7 +89,10 @@ class GameSession:
         ):
             self.game_status = GameStatus.SUCCESS
 
-        if len(self.guesses) > len(self.hints) and self.game_status is not GameStatus.SUCCESS:
+        if (
+            len(self.guesses) > len(self.hints)
+            and self.game_status is not GameStatus.SUCCESS
+        ):
             self.game_status = GameStatus.FAILED
 
         logger.info(f"Status {self.game_status} at step {len(self.guesses)}")
