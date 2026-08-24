@@ -55,13 +55,13 @@ def show_guesses(session: GameSession):
 
 @ui.refreshable
 def guess_inputs(session: GameSession):
-    with ui.row().classes("bg-green-400"):
+    with ui.row().classes(""):
         select_person = ui.select(
             label="Guess",
             with_input=True,
             options=session.candidates,
             on_change=lambda e: guess_refresh(e.value, session),
-        ).classes("w-full bg-red-500")
+        ).classes("w-full")
         skip_button = ui.button(
             "Skip", on_click=lambda: guess_refresh(None, session=session)
         ).classes("col-auto")
@@ -72,7 +72,7 @@ def guess_inputs(session: GameSession):
 
 
 def game_session_card(session: GameSession):
-    with ui.card().classes("w-full bg-blue-300") as card:
+    with ui.card().classes("w-full") as card:
         with ui.element("div").classes("flex flex-col gap-2 w-full"):
             guess_inputs(session=session)
             show_guesses(session=session)
