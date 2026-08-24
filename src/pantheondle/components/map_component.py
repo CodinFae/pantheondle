@@ -13,7 +13,7 @@ async def map_component(session: GameSession):
 
     m = ui.leaflet(center=center).classes("h-100")
     m.clear_layers()
-    _ = m.tile_layer(
+    m.tile_layer(
         url_template="https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}",
         options={
             "maxZoom": 16,

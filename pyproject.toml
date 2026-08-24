@@ -17,6 +17,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/pantheondle"]
 
+[tool.pyright]
+reportUnusedCallResult = false
+
 [dependency-groups]
 dev = [
     "deptry>=0.25.1",

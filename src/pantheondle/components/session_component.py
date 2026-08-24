@@ -45,7 +45,7 @@ def guess_refresh(guess: str | None, session: GameSession):
 
 @ui.refreshable
 def show_guesses(session: GameSession):
-    with ui.grid(columns=6):
+    with ui.grid(columns=len(session.hints)):
         for guess in session.get_guesses():
             if guess is None:
                 _ = ui.label("Skipped")
@@ -55,24 +55,25 @@ def show_guesses(session: GameSession):
 
 @ui.refreshable
 def guess_inputs(session: GameSession):
-    select_person = ui.select(
-        label="Guess",
-        with_input=True,
-        options=session.candidates,
-        on_change=lambda e: guess_refresh(e.value, session),
-    )
-    skip_button = ui.button(
-        "Skip", on_click=lambda: guess_refresh(None, session=session)
-    )
+    with ui.row().classes("bg-green-400"):
+        select_person = ui.select(
+            label="Guess",
+            with_input=True,
+            options=session.candidates,
+            on_change=lambda e: guess_refresh(e.value, session),
+        ).classes("w-full bg-red-500")
+        skip_button = ui.button(
+            "Skip", on_click=lambda: guess_refresh(None, session=session)
+        ).classes("col-auto")
 
-    if session.game_status is not GameStatus.ONGOING:
-        _ = select_person.disable()
-        _ = skip_button.disable()
+        if session.game_status is not GameStatus.ONGOING:
+            _ = select_person.disable()
+            _ = skip_button.disable()
 
 
 def game_session_card(session: GameSession):
-    with ui.card().classes("w-full") as card:
-        with ui.element("div").classes("flex flex-row gap-2"):
+    with ui.card().classes("w-full bg-blue-300") as card:
+        with ui.element("div").classes("flex flex-col gap-2 w-full"):
             guess_inputs(session=session)
             show_guesses(session=session)
 
