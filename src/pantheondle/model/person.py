@@ -1,6 +1,20 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import TypedDict
 
+
+class PersonRow(TypedDict):
+    bplace_name: str
+    bplace_lat: float
+    bplace_lon: float
+    birthyear: int
+    dplace_name: str
+    dplace_lat: float
+    dplace_lon: float
+    deathyear: int
+    gender: str
+    occupation: str
+    name: str
 
 @dataclass(frozen=True, slots=True)
 class Place:
@@ -10,7 +24,7 @@ class Place:
     year: int
 
     @classmethod
-    def birth_from_row(cls, row) -> "Place":
+    def birth_from_row(cls, row: PersonRow) -> "Place":
         return cls(
             name=row["bplace_name"],
             lat=row["bplace_lat"],
@@ -19,7 +33,7 @@ class Place:
         )
 
     @classmethod
-    def death_from_row(cls, row) -> "Place":
+    def death_from_row(cls, row: PersonRow) -> "Place":
         return cls(
             name=row["dplace_name"],
             lat=row["dplace_lat"],
@@ -43,7 +57,7 @@ class FamousPerson:
     name: str
 
     @classmethod
-    def from_row(cls, row) -> "FamousPerson":
+    def from_row(cls, row: PersonRow) -> "FamousPerson":
         raw_gender = row["gender"]
         gender = Gender.OTHER
         match raw_gender:

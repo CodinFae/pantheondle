@@ -13,7 +13,7 @@ from pantheondle.model.hints import (
     Hint,
     OccupationHint,
 )
-from pantheondle.model.person import FamousPerson
+from pantheondle.model.person import FamousPerson, PersonRow
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ class Game:
 
     def start(self, difficulty: Difficulty):
         all_persons = self._get_persons_by_level(difficulty)
-        row = all_persons.sample(1).iloc[0]
+        row: PersonRow = all_persons.sample(1).iloc[0].to_dict()
 
         return GameSession(
             selected_person=FamousPerson.from_row(row),
