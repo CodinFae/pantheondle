@@ -16,6 +16,7 @@ class PersonRow(TypedDict):
     occupation: str
     name: str
 
+
 @dataclass(frozen=True, slots=True)
 class Place:
     name: str

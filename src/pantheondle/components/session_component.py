@@ -1,6 +1,7 @@
 import logging
 
 from nicegui import ui
+from nicegui.elements.card import Card
 
 from pantheondle.model.game import GameSession, GameStatus
 from pantheondle.model.hints import (
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 @ui.refreshable
-def show_game(session: GameSession):
+def show_game(session: GameSession) -> None:
     if session.game_status is GameStatus.SUCCESS:
         ui.label("SUCCESS")
     if session.game_status is GameStatus.FAILED:
@@ -36,7 +37,7 @@ def show_game(session: GameSession):
                     ui.label(f"Born on {hint.birth_year}, Died on {hint.death_year}")
 
 
-def guess_refresh(guess: str | None, session: GameSession):
+def guess_refresh(guess: str | None, session: GameSession) -> None:
     session.guess(guess)
     guess_inputs.refresh()
     show_game.refresh()
@@ -44,7 +45,7 @@ def guess_refresh(guess: str | None, session: GameSession):
 
 
 @ui.refreshable
-def show_guesses(session: GameSession):
+def show_guesses(session: GameSession) -> None:
     with ui.grid(columns=len(session.hints)):
         for guess in session.get_guesses():
             if guess is None:
@@ -54,7 +55,7 @@ def show_guesses(session: GameSession):
 
 
 @ui.refreshable
-def guess_inputs(session: GameSession):
+def guess_inputs(session: GameSession) -> None:
     with ui.row().classes(""):
         select_person = ui.select(
             label="Guess",
@@ -71,7 +72,7 @@ def guess_inputs(session: GameSession):
             skip_button.disable()
 
 
-def game_session_card(session: GameSession):
+def game_session_card(session: GameSession) -> Card:
     with ui.card().classes("w-full") as card:
         with ui.element("div").classes("flex flex-col gap-2 w-full"):
             guess_inputs(session=session)

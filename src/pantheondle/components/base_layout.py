@@ -1,7 +1,9 @@
+from types import FunctionType
+
 from nicegui import ui
 
 
-async def base_layout(content_fn):
+async def base_layout(content_fn: FunctionType) -> None:
     # Fixed Header
     with ui.header().classes("bg-primary p-2"):
         ui.label("Pantheondle").classes("text-xl text-white font-bold")

@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 @ui.page("/")
-async def welcome_page():
-    async def content():
+async def welcome_page() -> None:
+    async def content() -> None:
         with ui.element("div").classes("flex gap-4"):
             ui.label("Select your difficulty").classes("text-lg font-medium")
 
@@ -21,7 +21,8 @@ async def welcome_page():
                 with (
                     ui.card()
                     .classes(
-                        "cursor-pointer hover:bg-slate-200 ease-in-out duration-200 hover:scale-110"
+                        "cursor-pointer hover:bg-slate-200 ease-in-out duration-200 "
+                        + "hover:scale-110"
                     )
                     .on("click", lambda d=difficulty: ui.navigate.to(f"/game/{d.name}"))
                 ):
@@ -31,8 +32,8 @@ async def welcome_page():
 
 
 @ui.page("/game/{difficulty}")
-async def game_page(difficulty: str):
-    async def content():
+async def game_page(difficulty: str) -> None:
+    async def content() -> None:
         try:
             difficulty_enum = Difficulty[difficulty]
 
@@ -50,8 +51,10 @@ async def game_page(difficulty: str):
 
     await base_layout(content)
 
-def main():
+
+def main() -> None:
     ui.run()
 
-if __name__ in {"__main__","__mp_main__"}:
+
+if __name__ in {"__main__", "__mp_main__"}:
     main()

@@ -1,25 +1,24 @@
 import argparse
+import logging
 from pathlib import Path
 
 import pandas as pd
 
+logger = logging.getLogger(__name__)
 
-def prepare_data(input_path: Path, output_dir: Path):
-    print(f"Reading {input_path} and saving to {output_dir}/persons.parquet")
+
+def prepare_data(input_path: Path, output_dir: Path) -> None:
     df = pd.read_csv(input_path)
-
-    print(f"Loaded {len(df)} persons")
+    logger.info(f"Loaded {len(df)} persons")
     df = df[~df["alive"]]
     df = df[pd.notna(df["dplace_name"])]
     df = df[pd.notna(df["bplace_name"])]
     df = df[pd.notna(df["bplace_lat"])]
     df = df[pd.notna(df["dplace_lat"])]
-
-    print(f"Kept {len(df)}")
+    logger.info(f"{len(df)} persons remaining")
 
     output_path = output_dir / "persons.parquet"
     df.to_parquet(output_path, index=False)
-    print(f"Saved file to {output_path}")
 
 
 def main() -> None:

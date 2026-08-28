@@ -37,25 +37,6 @@ class GameStatus(Enum):
     SUCCESS = 1
 
 
-class Game:
-    def __init__(self, parquet_path: Path) -> None:
-        df = pd.read_parquet(parquet_path)
-        logger.info(f"Loaded {len(df)} persons")
-        self.persons = df
-
-    def _get_persons_by_level(self, difficulty: Difficulty) -> pd.DataFrame:
-        return self.persons[self.persons["hpi"] > difficulty.value.cutoff]
-
-    def start(self, difficulty: Difficulty):
-        all_persons = self._get_persons_by_level(difficulty)
-        row: PersonRow = all_persons.sample(1).iloc[0].to_dict()
-
-        return GameSession(
-            selected_person=FamousPerson.from_row(row),
-            candidates=all_persons["name"].to_list(),
-        )
-
-
 @dataclass(slots=True)
 class GameSession:
     selected_person: FamousPerson
@@ -66,7 +47,7 @@ class GameSession:
 
     hints: list[Hint] = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.hints = [
             CitiesHint.from_person(self.selected_person),
             DatesHint.from_person(self.selected_person),
@@ -81,7 +62,7 @@ class GameSession:
     def get_guesses(self) -> list[str | None]:
         return self.guesses
 
-    def guess(self, guess_name: str | None):
+    def guess(self, guess_name: str | None) -> GameStatus:
         self.guesses.append(guess_name)
         if (
             guess_name == self.selected_person.name
@@ -97,3 +78,22 @@ class GameSession:
 
         logger.info(f"Status {self.game_status} at step {len(self.guesses)}")
         return self.game_status
+
+
+class Game:
+    def __init__(self, parquet_path: Path) -> None:
+        df = pd.read_parquet(parquet_path)
+        logger.info(f"Loaded {len(df)} persons")
+        self.persons = df
+
+    def _get_persons_by_level(self, difficulty: Difficulty) -> pd.DataFrame:
+        return self.persons[self.persons["hpi"] > difficulty.value.cutoff]
+
+    def start(self, difficulty: Difficulty) -> GameSession:
+        all_persons = self._get_persons_by_level(difficulty)
+        row: PersonRow = all_persons.sample(1).iloc[0].to_dict()
+
+        return GameSession(
+            selected_person=FamousPerson.from_row(row),
+            candidates=all_persons["name"].to_list(),
+        )
