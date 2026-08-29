@@ -5,7 +5,7 @@ from nicegui import ui
 from pantheondle.components.base_layout import base_layout
 from pantheondle.components.map_component import map_component
 from pantheondle.components.session_component import game_session_card
-from pantheondle.model.game import Difficulty, Game
+from pantheondle.model.game import Difficulty, PersonRepository, get_repository
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,9 +40,9 @@ async def game_page(difficulty: str) -> None:
         except ValueError:
             ui.navigate.to("/")
             return
-        game = Game("./data/persons.parquet")
+        game = get_repository()
 
-        session = game.start(difficulty_enum)
+        session = game.new_game(difficulty_enum)
 
         ui.label(f"Playing a game of difficulty: {difficulty}")
         with ui.element("div").classes("flex flex-column gap-2 w-full"):

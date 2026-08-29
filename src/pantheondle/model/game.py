@@ -1,10 +1,13 @@
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
+from functools import lru_cache
 from pathlib import Path
+from typing import final
 
 import pandas as pd
 
+from pantheondle.model.config import data_path
 from pantheondle.model.hints import (
     CitiesHint,
     DatesHint,
@@ -80,7 +83,8 @@ class GameSession:
         return self.game_status
 
 
-class Game:
+@final
+class PersonRepository:
     def __init__(self, parquet_path: Path) -> None:
         df = pd.read_parquet(parquet_path)
         logger.info(f"Loaded {len(df)} persons")
@@ -89,7 +93,7 @@ class Game:
     def _get_persons_by_level(self, difficulty: Difficulty) -> pd.DataFrame:
         return self.persons[self.persons["hpi"] > difficulty.value.cutoff]
 
-    def start(self, difficulty: Difficulty) -> GameSession:
+    def new_game(self, difficulty: Difficulty) -> GameSession:
         all_persons = self._get_persons_by_level(difficulty)
         row: PersonRow = all_persons.sample(1).iloc[0].to_dict()
 
@@ -97,3 +101,8 @@ class Game:
             selected_person=FamousPerson.from_row(row),
             candidates=all_persons["name"].to_list(),
         )
+
+
+@lru_cache(maxsize=1)
+def get_repository() -> PersonRepository:
+    return PersonRepository(data_path())
