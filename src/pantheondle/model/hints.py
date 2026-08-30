@@ -12,7 +12,7 @@ class CitiesHint:
     @classmethod
     def from_person(cls, person: FamousPerson) -> "CitiesHint":
         return cls(
-            birth_city=person.birth_place.name, death_city=person.death_place.name
+            birth_city=person.birth.name, death_city=person.death.name
         )
 
 
@@ -24,8 +24,8 @@ class DatesHint:
     @classmethod
     def from_person(cls, person: FamousPerson) -> "DatesHint":
         return cls(
-            birth_year=int(person.birth_place.year),
-            death_year=int(person.death_place.year),
+            birth_year=int(person.birth.year),
+            death_year=int(person.death.year),
         )
 
 

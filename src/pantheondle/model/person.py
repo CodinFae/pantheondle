@@ -18,14 +18,14 @@ class PersonRow(TypedDict):
 
 
 @dataclass(frozen=True, slots=True)
-class Place:
+class LifeEvent:
     name: str
     lat: float
     lon: float
     year: int
 
     @classmethod
-    def birth_from_row(cls, row: PersonRow) -> "Place":
+    def birth_from_row(cls, row: PersonRow) -> "LifeEvent":
         return cls(
             name=row["bplace_name"],
             lat=row["bplace_lat"],
@@ -34,7 +34,7 @@ class Place:
         )
 
     @classmethod
-    def death_from_row(cls, row: PersonRow) -> "Place":
+    def death_from_row(cls, row: PersonRow) -> "LifeEvent":
         return cls(
             name=row["dplace_name"],
             lat=row["dplace_lat"],
@@ -51,8 +51,8 @@ class Gender(Enum):
 
 @dataclass(frozen=True, slots=True)
 class FamousPerson:
-    birth_place: Place
-    death_place: Place
+    birth: LifeEvent
+    death: LifeEvent
     gender: Gender
     occupation: str
     name: str
@@ -68,8 +68,8 @@ class FamousPerson:
                 gender = Gender.FEMALE
 
         return cls(
-            birth_place=Place.birth_from_row(row),
-            death_place=Place.death_from_row(row),
+            birth_place=LifeEvent.birth_from_row(row),
+            death_place=LifeEvent.death_from_row(row),
             gender=gender,
             occupation=row["occupation"],
             name=row["name"],

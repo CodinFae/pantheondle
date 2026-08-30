@@ -7,8 +7,8 @@ async def map_component(session: GameSession) -> None:
 
     p = session.selected_person
     center = (
-        (p.birth_place.lat + p.death_place.lat) / 2,
-        (p.birth_place.lon + p.death_place.lon) / 2,
+        (p.birth.lat + p.death.lat) / 2,
+        (p.birth.lon + p.death.lon) / 2,
     )
 
     m = ui.leaflet(center=center).classes("h-100")
@@ -32,8 +32,8 @@ async def map_component(session: GameSession) -> None:
     m.run_map_method(
         "fitBounds",
         [
-            [p.birth_place.lat, p.birth_place.lon],
-            [p.death_place.lat, p.death_place.lon],
+            [p.birth.lat, p.birth.lon],
+            [p.death.lat, p.death.lon],
         ],
     )
 
@@ -41,14 +41,14 @@ async def map_component(session: GameSession) -> None:
     m.generic_layer(
         name="circle",
         args=[
-            (p.birth_place.lat, p.birth_place.lon),
+            (p.birth.lat, p.birth.lon),
             {"color": "green", "radius": "5000"},
         ],
     )
     m.generic_layer(
         name="circle",
         args=[
-            (p.death_place.lat, p.death_place.lon),
+            (p.death.lat, p.death.lon),
             {"color": "red", "radius": "5000"},
         ],
     )
