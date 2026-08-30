@@ -34,10 +34,9 @@ async def welcome_page() -> None:
 @ui.page("/game/{difficulty}")
 async def game_page(difficulty: str) -> None:
     async def content() -> None:
-        try:
-            difficulty_enum = Difficulty[difficulty]
 
-        except ValueError:
+        difficulty_enum = Difficulty.parse(difficulty)
+        if difficulty_enum is None:
             ui.navigate.to("/")
             return
         game = get_repository()

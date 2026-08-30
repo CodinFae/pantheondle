@@ -33,6 +33,9 @@ class Difficulty(Enum):
     EXPERTS = DifficultyConfig(cutoff=50)
     IMPOSSIBLE = DifficultyConfig(cutoff=0)
 
+    @classmethod
+    def parse(cls, raw:str) -> "Difficulty | None":
+        return cls.__members__.get(raw.upper())
 
 class GameStatus(Enum):
     FAILED = -1
