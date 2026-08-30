@@ -69,6 +69,9 @@ class GameSession:
         return self.guesses
 
     def guess(self, guess_name: str | None) -> GameStatus:
+        if(self.game_status != GameStatus.ONGOING):
+            return self.game_status
+
         self.guesses.append(guess_name)
         if (
             guess_name == self.selected_person.name
