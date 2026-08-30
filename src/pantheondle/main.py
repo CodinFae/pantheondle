@@ -52,7 +52,7 @@ async def game_page(difficulty: str) -> None:
 
 
 def main() -> None:
-    ui.run()
+    ui.run(reload=False)
 
 
 if __name__ in {"__main__", "__mp_main__"}:
