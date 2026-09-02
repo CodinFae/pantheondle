@@ -63,6 +63,14 @@ class GameSession:
             HiddenNameHint.from_person(self.selected_person),
         ]
 
+    def get_candidates_via_autocomplete(self, text: str, n_return: int = 5) -> list[str]:
+        matches = [
+            candidate for candidate in self.candidates
+            if text.lower() in candidate.lower()
+        ][:n_return]
+
+        return matches
+
     def get_hints(self) -> list[Hint]:
         return self.hints[: len(self.guesses)]
 

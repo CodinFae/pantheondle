@@ -1,7 +1,9 @@
 import logging
+from typing import List
 
 from nicegui import ui
 from nicegui.elements.card import Card
+from nicegui.elements.select import Select
 
 from pantheondle.model.game import GameSession, GameStatus
 from pantheondle.model.hints import (
@@ -54,15 +56,20 @@ def show_guesses(session: GameSession) -> None:
                 ui.label(guess)
 
 
+def update_select(select: Select, options: list[str]):
+    select.options.clear()  # pyright: ignore[reportUnknownMemberType]
+    select.options.extend(options) # pyright: ignore[reportUnknownMemberType]
+    select.update()
+
 @ui.refreshable
 def guess_inputs(session: GameSession) -> None:
     with ui.row().classes(""):
         select_person = ui.select(
             label="Guess",
             with_input=True,
-            options=session.candidates,
+            options=session.candidates[:5],
             on_change=lambda e: guess_refresh(e.value, session),
-        ).classes("w-full")
+        ).classes("w-full").on("input-value", lambda e: update_select(select_person, session.get_candidates_via_autocomplete(e.args)) )
         skip_button = ui.button(
             "Skip", on_click=lambda: guess_refresh(None, session=session)
         ).classes("col-auto")
