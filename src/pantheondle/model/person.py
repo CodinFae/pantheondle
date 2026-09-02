@@ -1,6 +1,9 @@
+import logging
 from dataclasses import dataclass
 from enum import Enum
 from typing import TypedDict
+
+logger = logging.getLogger(__name__)
 
 
 class PersonRow(TypedDict):
@@ -66,10 +69,12 @@ class FamousPerson:
                 gender = Gender.MALE
             case "F":
                 gender = Gender.FEMALE
+            case _:
+                logger.warning("%s gender not recongnized", raw_gender)
 
         return cls(
-            birth_place=LifeEvent.birth_from_row(row),
-            death_place=LifeEvent.death_from_row(row),
+            birth=LifeEvent.birth_from_row(row),
+            death=LifeEvent.death_from_row(row),
             gender=gender,
             occupation=row["occupation"],
             name=row["name"],

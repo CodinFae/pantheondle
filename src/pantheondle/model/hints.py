@@ -11,9 +11,7 @@ class CitiesHint:
 
     @classmethod
     def from_person(cls, person: FamousPerson) -> "CitiesHint":
-        return cls(
-            birth_city=person.birth.name, death_city=person.death.name
-        )
+        return cls(birth_city=person.birth.name, death_city=person.death.name)
 
 
 @dataclass(slots=True, frozen=True)

@@ -5,7 +5,7 @@ from nicegui import ui
 from pantheondle.components.base_layout import base_layout
 from pantheondle.components.map_component import map_component
 from pantheondle.components.session_component import game_session_card
-from pantheondle.model.game import Difficulty, PersonRepository, get_repository
+from pantheondle.model.game import Difficulty, get_repository
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

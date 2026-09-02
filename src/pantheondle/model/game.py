@@ -34,8 +34,9 @@ class Difficulty(Enum):
     IMPOSSIBLE = DifficultyConfig(cutoff=0)
 
     @classmethod
-    def parse(cls, raw:str) -> "Difficulty | None":
+    def parse(cls, raw: str) -> "Difficulty | None":
         return cls.__members__.get(raw.upper())
+
 
 class GameStatus(Enum):
     FAILED = -1
@@ -69,20 +70,14 @@ class GameSession:
         return self.guesses
 
     def guess(self, guess_name: str | None) -> GameStatus:
-        if(self.game_status != GameStatus.ONGOING):
+        if self.game_status != GameStatus.ONGOING:
             return self.game_status
 
         self.guesses.append(guess_name)
-        if (
-            guess_name == self.selected_person.name
-            and self.game_status is not GameStatus.FAILED
-        ):
+        if guess_name == self.selected_person.name:
             self.game_status = GameStatus.SUCCESS
 
-        if (
-            len(self.guesses) > len(self.hints)
-            and self.game_status is not GameStatus.SUCCESS
-        ):
+        elif len(self.guesses) > len(self.hints):
             self.game_status = GameStatus.FAILED
 
         logger.info(f"Status {self.game_status} at step {len(self.guesses)}")
