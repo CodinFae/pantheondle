@@ -33,6 +33,7 @@ dev = [
     "deptry>=0.25.1",
     "ruff>=0.16.1",
     "pandas-stubs>=3.0.5.260730",   # type stubs — check-time only, was in runtime deps
+    "pytest>=9.1.1",
 ]
 
 [tool.deptry]
