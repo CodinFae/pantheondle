@@ -10,7 +10,10 @@ The HPI is:
 
 ## Setup
 
-Download a csv from the Pantheon website, store it in ./data and run the project via `uv run -m pantheondle.main`
+1. Use `just data [PATH_TO_DATA]` to automatically process the downloaded data from the pantheon csv database.
+Tested with `person_2025_update.csv`
+2. Use `just run` to run the website locally
+
 
 ## Citation
 
