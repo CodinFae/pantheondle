@@ -14,4 +14,4 @@ async def base_layout(content_fn: FunctionType) -> None:
 
     # Sticky/Fixed Footer
     with ui.footer().classes("bg-gray-200 text-black p-2"):
-        ui.label("FOOTER")
+        ui.label("Based on pantheon.world (Yu, A. Z., et al. (2016). Pantheon 1.0, a manually verified dataset of globally famous biographies. Scientific Data 2:150075. doi: 10.1038/sdata.2015.75)")
